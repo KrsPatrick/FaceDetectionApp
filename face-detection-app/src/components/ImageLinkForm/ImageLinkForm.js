@@ -1,9 +1,10 @@
 import React from 'react';
 import './ImageLinkForm.css'
 import Clarifai from 'clarifai'
+import env from "react-dotenv";
 
 const app = new Clarifai.App({
-    apiKey: 'aa71dac8b6874946bafcc09b902fb444'
+    apiKey: env.CLARIFAI_KEY
    });
 
 const ImageLinkForm = ({handleChange, setSt, url, calculateFaceLocation, displayFaceBox }) => {
