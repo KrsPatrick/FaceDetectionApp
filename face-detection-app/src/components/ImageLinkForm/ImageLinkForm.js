@@ -4,10 +4,10 @@ import Clarifai from 'clarifai'
 import env from "react-dotenv";
 
 const app = new Clarifai.App({
-    apiKey: env.CLARIFAI_KEY
+    apiKey:  env.CLARIFAI_KEY
    });
 
-const ImageLinkForm = ({handleChange, setSt, url, calculateFaceLocation, displayFaceBox }) => {
+const ImageLinkForm = ({id, handleChange, setSt, url, calculateFaceLocation, displayFaceBox }) => {
 
 
     function onSubmit(){
@@ -19,6 +19,16 @@ const ImageLinkForm = ({handleChange, setSt, url, calculateFaceLocation, display
         url()
         )
         .then((response) => {
+            if (response) {
+                fetch("http://localhost:8000/image", {
+                    method: 'post',
+                    headers: {'Content-Type': "application/json"},
+                    body: JSON.stringify({
+                        id: id
+                    })
+                })
+                
+            }
             displayFaceBox(calculateFaceLocation(response))
         })
         .catch((err) => {

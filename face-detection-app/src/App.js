@@ -3,10 +3,10 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import Registration from './components/Registration/Registration';
 import Signin from './components/Signin/Signin';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import React from 'react';
-
 
 
 
@@ -18,9 +18,29 @@ class App extends React.Component {
       input: '',
       imageUrl: '',
       box: {},
-      route: 'signin'
+      route: 'signin',
+      isSignedIn: false,
+      user: {
+          id: '',
+          name: '',
+          email: '',
+          entries: '0',
+          joined: ""
+      }
     }
   }
+
+  loadUser = (data) => {
+    this.setState({
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+    })
+  }
+
+  
 
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
@@ -49,6 +69,11 @@ class App extends React.Component {
   }
 
   onRouteChange = (route) => {
+    if (route === 'signout'){
+      this.setState({isSignedIn: false})
+    } else if (route === 'home') {
+      this.setState({isSignedIn: true})
+    }
     this.setState({route: route})
   }
   
@@ -59,16 +84,22 @@ class App extends React.Component {
   render() {
     return (
     <div className="App">
-      <Navigation onRouteChange={this.onRouteChange} />
+      <Navigation issSignedIn={this.state.isSignedIn} onRouteChange={this.onRouteChange} />
       
-      { this.state.route === 'signin' 
-      ? <Signin onRouteChange={this.onRouteChange}/>
-      : <div> 
+      { this.state.route === 'home' 
+      ? <div> 
           <Logo />
           <Rank />
-          <ImageLinkForm displayFaceBox={this.displayFaceBox} calculateFaceLocation={this.calculateFaceLocation} handleChange={this.handleChange} setSt={this.setSt} url={this.url}/>
+          <ImageLinkForm id={this.state.user.id} displayFaceBox={this.displayFaceBox} calculateFaceLocation={this.calculateFaceLocation} handleChange={this.handleChange} setSt={this.setSt} url={this.url}/>
           <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
-        </div>  
+        </div>
+      : (
+        this.state.route === 'signin'
+        ? <Signin onRouteChange={this.onRouteChange}/>
+        : <Registration loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+
+      )   
+        
       }
     </div>
   );
