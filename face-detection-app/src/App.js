@@ -8,35 +8,36 @@ import Signin from './components/Signin/Signin';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import React from 'react';
 
-
+const initalState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signin',
+  isSignedIn: false,
+  user: {
+      id: '',
+      name: '',
+      email: '',
+      entries: '0',
+      joined: ""
+  }
+}
 
 class App extends React.Component {
 
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signin',
-      isSignedIn: false,
-      user: {
-          id: '',
-          name: '',
-          email: '',
-          entries: '0',
-          joined: ""
-      }
-    }
+    this.state = initalState
   }
 
   loadUser = (data) => {
-    this.setState({
+    this.setState({user: {
         id: data.id,
         name: data.name,
         email: data.email,
         entries: data.entries,
         joined: data.joined
+    }       
     })
   }
 
@@ -70,7 +71,7 @@ class App extends React.Component {
 
   onRouteChange = (route) => {
     if (route === 'signout'){
-      this.setState({isSignedIn: false})
+      this.setState(initalState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
@@ -89,13 +90,13 @@ class App extends React.Component {
       { this.state.route === 'home' 
       ? <div> 
           <Logo />
-          <Rank />
+          <Rank name={this.state.user.name} />
           <ImageLinkForm id={this.state.user.id} displayFaceBox={this.displayFaceBox} calculateFaceLocation={this.calculateFaceLocation} handleChange={this.handleChange} setSt={this.setSt} url={this.url}/>
           <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
         </div>
       : (
         this.state.route === 'signin'
-        ? <Signin onRouteChange={this.onRouteChange}/>
+        ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
         : <Registration loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
 
       )   

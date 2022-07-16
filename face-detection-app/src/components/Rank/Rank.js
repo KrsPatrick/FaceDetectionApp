@@ -1,14 +1,14 @@
 import React from 'react';
 
 
-const Rank = () => {
+const Rank = ({name}) => {
     return (
         <div>
             <div className='white f3'>
                 {'Face Detection'}
             </div>
             {/* <div className='white f1'>
-                {'#5'}
+                {`Hi ${name}`}
             </div> */}
         </div>
         )

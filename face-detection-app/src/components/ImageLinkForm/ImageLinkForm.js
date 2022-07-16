@@ -4,7 +4,7 @@ import Clarifai from 'clarifai'
 import env from "react-dotenv";
 
 const app = new Clarifai.App({
-    apiKey:  env.CLARIFAI_KEY
+    apiKey: 'aa71dac8b6874946bafcc09b902fb444' // process.env.REACT_APP_CLARIFAI_KEY
    });
 
 const ImageLinkForm = ({id, handleChange, setSt, url, calculateFaceLocation, displayFaceBox }) => {
@@ -27,6 +27,7 @@ const ImageLinkForm = ({id, handleChange, setSt, url, calculateFaceLocation, dis
                         id: id
                     })
                 })
+                .catch(console.log)
                 
             }
             displayFaceBox(calculateFaceLocation(response))
